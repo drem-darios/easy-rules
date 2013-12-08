@@ -1,212 +1,122 @@
-<!doctype html>
-<html>
-  <head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Easy Rules</title>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Easy Rules by benas</title>
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="javascripts/respond.js"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <!--[if lt IE 8]>
-    <link rel="stylesheet" href="stylesheets/ie.css">
-    <![endif]-->
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="Easy Rules is a simple yet powerful Java Rules Engine">
+    <meta name="author" content="Mahmoud Ben Hassine">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="img/gear.ico"/>
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="css/offcanvas.css" rel="stylesheet" media="screen">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/idea.css" rel="stylesheet">
 
-  </head>
-  <body>
-      <div id="header">
-        <nav>
-          <li class="fork"><a href="https://github.com/benas/easy-rules">View On GitHub</a></li>
-          <li class="downloads"><a href="https://github.com/benas/easy-rules/zipball/master">ZIP</a></li>
-          <li class="downloads"><a href="https://github.com/benas/easy-rules/tarball/master">TAR</a></li>
-          <li class="title">DOWNLOADS</li>
-        </nav>
-      </div><!-- end header -->
+</head>
+<body>
 
-    <div class="wrapper">
+<div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
 
-      <section>
-        <div id="title">
-          <h1>Easy Rules</h1>
-          <p>Apply your business rules without headache!</p>
-          <hr>
-          <span class="credits left">Project maintained by <a href="https://github.com/benas">benas</a></span>
-          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
+    <a href="https://github.com/benas/easy-rules"><img style="position: absolute; top: 0; right: 0; border: 0;" src="img/forkme.png" alt="Fork me on GitHub"></a>
+
+    <div class="container">
+
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index.html"><i class="fa fa-gears"></i> Easy Rules</a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <p class="navbar-text pull-right">Version: 1.1.0</p>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+                <li><a href="gettingStarted.html"><i class="fa fa-folder-open"></i> Getting started</a></li>
+                <li><a href="documentation.html"><i class="fa fa-book"></i> Documentation</a></li>
+                <li><a href="tutorials.html"><i class="fa fa-flask"></i> Tutorials</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="row row-offcanvas row-offcanvas-right">
+
+        <div class="col-xs-12 col-sm-9">
+
+            <div class="row">
+
+                <h2 >What is Easy Rules?</h2>
+
+                <p>Easy Rules is a simple yet powerful Java Rules Engine providing the following features :</p>
+
+                <ul>
+                    <li><p>Lightweight framework and easy to learn API</p></li>
+                    <li><p>Useful abstractions to define business rules and apply them easily using Java</p></li>
+                    <li><p>The ability to create composite rules from primitive ones</p></li>
+                    <li><p>Dynamic rule configuration at runtime using JMX</p></li>
+                </ul>
+
+                <p>In a very interesting <a href="http://martinfowler.com/bliki/RulesEngine.html">article</a> about rules engines, Martin Fowler says the following :</p>
+                <blockquote>
+                    <p>You can build a simple rules engine yourself. All you need is to create a bunch of objects with conditions and actions,
+                        store them in a collection, and run through them to evaluate the conditions and execute the actions.</p>
+                    <small><a href="http://martinfowler.com/bliki/RulesEngine.html">Martin Fowler</a></small>
+                </blockquote>
+
+                <p>This is exactly what Easy Rules does, with more features like rule composition and dynamic configuration.</p>
+
+            </div>
+
+            <div class="row">
+
+                <h1>Presentation</h1>
+
+                <p>You can find some slides on Easy Rules at speaker deck <a href="https://speakerdeck.com/benas/easy-rules">here</a>.</p>
+
+            </div>
+
+            <div class="row">
+
+                <h1>License</h1>
+
+                <p>Easy Rules is released under the <a href="http://opensource.org/licenses/mit-license.php/" target="_blank">MIT License</a>.</p>
+            </div>
+
         </div>
 
-        <h2>What is Easy Rules?</h2>
-
-<p>Easy Rules is a simple yet powerful Java Rules Engine.</p>
-
-<p>It provides useful abstractions to define business rules and apply them easily.</p>
-
-<h2>Documentation</h2>
-
-<h3>Quick introduction</h3>
-
-<p>Most business rules can be represented by the following rule definition :</p>
-
-<ul>
-<li><p>Name : Unique rule name</p></li>
-<li><p>Description : A brief description of the rule</p></li>
-<li><p>Priority : Rule priority regarding to other rules</p></li>
-<li><p>Conditions : Set of conditions that should be satisfied to apply the rule</p></li>
-<li><p>Actions : Set of actions to perform when conditions are satisfied</p></li>
-</ul><p>Easy Rules simply provides an abstraction for each of these key points that define a business rule.</p>
-
-<h3>Easy Rules Key API</h3>
-
-<p>A rule in Easy Rules is an instance of the <code>Rule</code> class :</p>
-
-<div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Rule</span> <span class="kd">implements</span> <span class="n">Comparable</span><span class="o">&lt;</span><span class="n">Rule</span><span class="o">&gt;</span> <span class="o">{</span>
-
-    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
-
-    <span class="kd">private</span> <span class="n">String</span> <span class="n">description</span><span class="o">;</span>
-
-    <span class="kd">private</span> <span class="kt">int</span> <span class="n">priority</span><span class="o">;</span>
-
-    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">evaluateConditions</span><span class="o">()</span> <span class="o">{</span><span class="k">return</span> <span class="kc">false</span><span class="o">;}</span>
-
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">performActions</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{}</span>
-
-    <span class="c1">//getters, setters and compareTo methods omitted</span>
-
-<span class="o">}</span>
-</pre></div>
-
-<p>The <code>name</code>, <code>description</code> and <code>priority</code> attributes are self explanatory.</p>
-
-<p>The <code>evaluateConditions</code> method encapsulates conditions that must evaluate to TRUE to trigger the rule.</p>
-
-<p>The <code>performActions</code> method encapsulates actions that should be performed when rule's conditions are satisfied.</p>
-
-<p>Of course, evaluating conditions and performing actions should be delegated to other objects if used across multiple rules.</p>
-
-<h3>Easy Rules engine</h3>
-
-<p>Easy Rules engine handles a registry of rules with unique names. These rules are applied according to their priorities.
-By default, lower values represent higher priorities. To override this default behavior, you can extend the <code>Rule</code> class
-and override <code>compareTo</code> method to provide a custom priority strategy.</p>
-
-<p>Easy Rules provide the following parameters:</p>
-
-<table>
-<tr>
-<th align="center">Parameter</th>
-<th align="center">Type</th>
-<th align="center">Required</th>
-<th align="center">Default</th>
-<th>Description</th>
-</tr>
-<tr>
-<td align="center">skipOnFirstAppliedRule</td>
-<td align="center">boolean</td>
-<td align="center">no</td>
-<td align="center">false</td>
-<td>skip next applicable rules when a rule is applied</td>
-</tr>
-<tr>
-<td align="center">rulePriorityThreshold</td>
-<td align="center">int</td>
-<td align="center">no</td>
-<td align="center">10000</td>
-<td>skip next rules if priority exceeds a user defined threshold.</td>
-</tr>
-</table><h2>Hello World Sample</h2>
-
-<p>This sample shows how to use Easy Rules to say Hello to only duke's friends.
-The program asks the user if he/she is a friend of duke and says Hello only if he/she responds yes!</p>
-
-<p>The rule class is the following :</p>
-
-<div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloWorldRule</span> <span class="kd">extends</span> <span class="n">Rule</span> <span class="o">{</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * The user input</span>
-<span class="cm">     */</span>
-    <span class="kd">private</span> <span class="n">String</span> <span class="n">input</span><span class="o">;</span>
-
-    <span class="kd">public</span> <span class="nf">HelloWorldRule</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">String</span> <span class="n">description</span><span class="o">,</span> <span class="kt">int</span> <span class="n">priority</span><span class="o">)</span> <span class="o">{</span>
-        <span class="kd">super</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">description</span><span class="o">,</span> <span class="n">priority</span><span class="o">);</span>
-    <span class="o">}</span>
-
-    <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">evaluateConditions</span><span class="o">()</span> <span class="o">{</span>
-        <span class="c1">//The rule should be applied only if the user's response is yes (duke friend)</span>
-        <span class="k">return</span> <span class="n">input</span><span class="o">.</span><span class="na">equalsIgnoreCase</span><span class="o">(</span><span class="s">"yes"</span><span class="o">);</span>
-    <span class="o">}</span>
-
-    <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">performActions</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
-        <span class="c1">//When rule conditions are satisfied, prints 'Hello duke's friend!' to the console</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Hello duke's friend!"</span><span class="o">);</span>
-    <span class="o">}</span>
-
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setInput</span><span class="o">(</span><span class="n">String</span> <span class="n">input</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">this</span><span class="o">.</span><span class="na">input</span> <span class="o">=</span> <span class="n">input</span><span class="o">;</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-</pre></div>
-
-<p>The launcher class is the following :</p>
-
-<div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloWorldSampleLauncher</span> <span class="o">{</span>
-
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-
-        <span class="n">Scanner</span> <span class="n">scanner</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Are you a friend of duke? [yes/no]:"</span><span class="o">);</span>
-        <span class="n">String</span> <span class="n">input</span> <span class="o">=</span> <span class="n">scanner</span><span class="o">.</span><span class="na">nextLine</span><span class="o">();</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * Define the rule</span>
-<span class="cm">         */</span>
-        <span class="n">HelloWorldRule</span> <span class="n">helloWorldRule</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HelloWorldRule</span><span class="o">(</span><span class="s">"Hello World rule"</span><span class="o">,</span> <span class="s">"Say Hello to only duke's friends"</span><span class="o">,</span> <span class="mi">1</span><span class="o">);</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * Set data to operate on</span>
-<span class="cm">         */</span>
-        <span class="n">helloWorldRule</span><span class="o">.</span><span class="na">setInput</span><span class="o">(</span><span class="n">input</span><span class="o">.</span><span class="na">trim</span><span class="o">());</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * Create a default rules engine and register the business rule</span>
-<span class="cm">         */</span>
-        <span class="n">RulesEngine</span> <span class="n">rulesEngine</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DefaultRulesEngine</span><span class="o">();</span>
-        <span class="n">rulesEngine</span><span class="o">.</span><span class="na">registerRule</span><span class="o">(</span><span class="n">helloWorldRule</span><span class="o">);</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * Fire rules</span>
-<span class="cm">         */</span>
-        <span class="n">rulesEngine</span><span class="o">.</span><span class="na">fireRules</span><span class="o">();</span>
-
-    <span class="o">}</span>
-<span class="o">}</span>
-</pre></div>
-
-<p>More samples of how to use Easy Rules can be found <a href="https://github.com/benas/easy-rules/tree/master/easyrules-samples">here</a>.</p>
-
-<h2>License</h2>
-
-<p>Easy Rules is released under the <a href="http://opensource.org/licenses/mit-license.php/">MIT License</a>.</p>
-      </section>
+        <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+            <div class="list-group">
+                <a href="index.html" class="list-group-item active"><i class="fa fa-home"></i> Home</a>
+                <a href="gettingStarted.html" class="list-group-item"><i class="fa fa-folder-open"></i> Getting started</a>
+                <a href="documentation.html" class="list-group-item"><i class="fa fa-book"></i> Documentation</a>
+                <a href="tutorials.html" class="list-group-item"><i class="fa fa-flask"></i> Tutorials</a>
+            </div>
+        </div>
 
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-              <script type="text/javascript">
-            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-          </script>
-          <script type="text/javascript">
-            try {
-              var pageTracker = _gat._getTracker("UA-39540718-1");
-            pageTracker._trackPageview();
-            } catch(err) {}
-          </script>
 
-  </body>
+    <hr>
+
+    <footer>
+        <div class="container">
+            <p class="pull-right"><a href="#"><i class="fa fa-arrow-up"></i> Back to top</a></p>
+
+            <p>Easy Rules is maintained by <a href="mailto:md.benhassine@gmail.com?subject=[Easy Rules]"><i
+                    class="fa fa-envelope"></i> benas</a> at <a href="https://github.com/benas/easy-rules"><i
+                    class="fa fa-github-alt"></i> Github</a></p>
+        </div>
+    </footer>
+
+</div>
+<script src="js/jquery-1.10.2.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/offcanvas.js"></script>
+<script src="js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</body>
 </html>
