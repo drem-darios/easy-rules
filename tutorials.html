@@ -150,6 +150,17 @@
                     <li><code>$&gt;cd easyrules-samples</code></li>
                     <li><code>$&gt;mvn exec:java -P runHelloWorldTutorial</code></li>
                 </ul>
+				
+				<p>If you run this tutorial, you would get the following output :</p>
+				
+<pre><code>Are you a friend of duke? [yes/no]:
+yes
+10 dec. 2013 13:26:19 io.github.easyrules.core.DefaultRulesEngine fireRules
+INFO: Rule 'Hello World rule' triggered.
+Hello duke's friend!
+10 dec. 2013 13:26:19 io.github.easyrules.core.DefaultRulesEngine fireRules
+INFO: Rule 'Hello World rule' performed successfully.
+</code></pre>				
 
             </div>
 
@@ -157,13 +168,111 @@
 
                 <h1 id="onlineShopTutorial">Online Shop Tutorial</h1>
 
-                <p>In this tutorial, we have an online shop application and we would like to implement the following business rule :</p>
-                <p>Whenever a new customer places an order with an amount greater than a defined threshold, send an alert about this suspect order to the monitoring team.</p>
-                <p>Moreover, the order amount threshold should be reconfigurable via JMX so we can change it at runtime.</p>
+                <p>In this tutorial, we have an online shop application and we would like to implement the following requirements :</p>
+				<ol>
+					<li>Whenever a new customer places an order with an amount greater than a defined threshold, send an alert about this suspect order to the monitoring team.</li>
+					<li>Moreover, the order amount threshold should be reconfigurable via JMX so we can change it at runtime.</li>
+				</ol>
+				
+                <p>In the first part of this tutorial, we will see how to use Easy Rules to implement the business rule described in requirement #1.</p>
+				<p>In the second part, we will add JMX capability to the business rule developed in part 1 to be able to change the order amount threshold at runtime (requirement #2).</p>
 
-                <p>In this application, orders and customers are represented by the <code>Order</code> and <code>Customer</code> classes.</p>
+				<h3>Part 1 : Implementing the business rule</h3>
+				
+                <p>In this application, orders and customers are represented by the 
+				<a href="https://github.com/benas/easy-rules/blob/master/easyrules-samples/src/main/java/io/github/easyrules/samples/order/Order.java"><code>Order</code></a> and
+				<a href="https://github.com/benas/easy-rules/blob/master/easyrules-samples/src/main/java/io/github/easyrules/samples/order/Customer.java"><code>Customer</code></a> classes.</p>
 
-                <p>First, let's define an interface that allows us to change order amount threshold via JMX as follows :</p>
+                <p>First, let's implement the rule's logic by extending the <code>BasicRule</code> class as follows :</p>
+
+<pre><code class="java">public class SuspectOrderRule extends BasicRule {
+
+    private float suspectOrderAmountThreshold = 1000;
+
+    private Order order;
+
+    private Customer customer;
+
+    SuspectOrderRule(String name, String description, int priority) {
+        super(name, description, priority);
+    }
+
+    @Override
+    public boolean evaluateConditions() {
+        return order.getAmount() > suspectOrderAmountThreshold && customer.isNew();
+    }
+
+    @Override
+    public void performActions() throws Exception {
+        System.out.println("Alert : A new customer [id=" + customer.getCustomerId() +
+        "] has placed an order [id=" + order.getOrderId() + "] with amount " +
+        order.getAmount() + " > " + suspectOrderAmountThreshold);
+    }
+
+    // getters and setters for customer and order fields omitted
+
+}
+</code></pre>
+
+                <p>This rule operates on an order and a customer instances which represent the data needed to operate on.</p>
+
+                <p>The <code>evaluateConditions</code> method evaluates to true when the customer is new and the order amount is greater than the defined threshold.</p>
+
+                <p>The <code>performActions</code> method simply writes to the console the specified alert (this could be sending an email or another action in a real use case). </p>
+
+                <p>Then, let's create an Easy Rules engine and register the <code>SuspectOrderRule</code> rule :</p>
+
+<pre><code class="java">public class OrderSampleLauncher {
+
+    public static void main(String[] args) throws InterruptedException {
+
+    Order order = new Order(6654, 1200);
+    Customer customer = new Customer(2356, true);
+
+    /**
+    * Create a business rule instance
+    */
+    SuspectOrderRule suspectOrderRule = new SuspectOrderRule(
+		"Suspect Order",
+		"Send alert if a new customer places an order with amount greater than a threshold",
+		1);
+
+    /**
+    * Set data to operate on
+    */
+    suspectOrderRule.setOrder(order);
+    suspectOrderRule.setCustomer(customer);
+
+    /**
+    * Create a default rules engine and register the business rule
+    */
+    RulesEngine rulesEngine = new DefaultRulesEngine();
+    rulesEngine.registerRule(suspectOrderRule);
+
+    /**
+    * Fire rules
+    */
+    rulesEngine.fireRules();
+
+    }
+}
+</code></pre>
+
+                <p>To run this tutorial, you can follow these instructions from the root directory of Easy Rules :</p>
+                <ul>
+                    <li><code>$&gt;mvn install</code></li>
+                    <li><code>$&gt;cd easyrules-samples</code></li>
+                    <li><code>$&gt;mvn exec:java -P runOnlineShopTutorial</code></li>
+                </ul>
+
+                <p>When you run this tutorial, the rule named <code>Suspect Order</code> that we registered will be applied
+                    since the order amount (1200) is greater than the threshold (1000) and the customer 2356 is a new customer. </p>
+				
+				<h3>Part 2 : Adding JMX capability to the business rule</h3>
+				
+				<p>With Easy Rules, you can extend the <code>BasicJmxManagedRule</code> to make your rule manageable via JMX. By default, only the rule priority will be exposed as a JMX attribute.</p>
+				
+				<p>In this tutorial, we need also to expose the order amount threshold as a JMX attribute. So first, let's define an interface that allows us to change order amount threshold via JMX as follows :</p>
 
 <pre><code class="java">@MXBean
 public interface SuspectOrderJmxManagedRule extends JmxManagedRule {
@@ -183,8 +292,9 @@ public interface SuspectOrderJmxManagedRule extends JmxManagedRule {
 }
 </code></pre>
 
-                <p>Then, we should implement the rule's logic by extending the <code>BasicJmxManagedRule</code> class as follows :</p>
-
+			<p>Then, we should make our <code>SuspectOrderRule</code> extend the <code>BasicJmxManagedRule</code> to inherit JMX capabilities and implement the <code>SuspectOrderJmxManagedRule</code> to expose the order amount threshold as JMX attribute.</p>
+			<p>So here is the new <code>SuspectOrderRule</code> class :</p>
+				
 <pre><code class="java">public class SuspectOrderRule extends BasicJmxManagedRule implements SuspectOrderJmxManagedRule {
 
     private float suspectOrderAmountThreshold = 1000;
@@ -209,22 +319,22 @@ public interface SuspectOrderJmxManagedRule extends JmxManagedRule {
         order.getAmount() + " > " + suspectOrderAmountThreshold);
     }
 
-    // getters and setters for customer, order and suspectOrderAmountThreshold omitted
+    // getters and setters for customer, order omitted
+
+    public float getSuspectOrderAmountThreshold() {
+        return suspectOrderAmountThreshold;
+    }
+
+    public void setSuspectOrderAmountThreshold(float suspectOrderAmountThreshold) {
+        this.suspectOrderAmountThreshold = suspectOrderAmountThreshold;
+    }
 
 }
 </code></pre>
 
-                <p>This rules operates on an order and a customer instances which represent the data needed to operate on.</p>
-
-                <p>The <code>evaluateConditions</code> method evaluates to true when the customer is new and the order amount is greater than the defined threshold.</p>
-
-                <p>The <code>performActions</code> method simply write to the console the specified alert (this could be sending an email or another action in a real use case). </p>
-
-                <p>Moreover, since the <code>SuspectOrderRule</code> class extends the <code>BasicJmxManagedRule</code>, the attribute <code>suspectOrderAmountThreshold</code> is now manageable via JMX at runtime
-                so we can change its value on the fly.</p>
-
-                <p>Finally, let's create an Easy Rules engine and register this rule :</p>
-
+			<p>Finally, let's suspend the program for 30s to change the order amount threshold value at runtime 
+			via any compliant JMX client and see the engine behavior after this change :</p>
+			
 <pre><code class="java">public class OrderSampleLauncher {
 
     public static void main(String[] args) throws InterruptedException {
@@ -236,9 +346,9 @@ public interface SuspectOrderJmxManagedRule extends JmxManagedRule {
     * Create a business rule instance
     */
     SuspectOrderRule suspectOrderRule = new SuspectOrderRule(
-    "Suspect Order",
-    "Send alert if a new customer places an order with amount greater than a threshold",
-    1);
+		"Suspect Order",
+		"Send alert if a new customer places an order with amount greater than a threshold",
+		1);
 
     /**
     * Set data to operate on
@@ -270,19 +380,6 @@ public interface SuspectOrderJmxManagedRule extends JmxManagedRule {
 }
 </code></pre>
 
-                <p>To run this tutorial, you can follow these instructions from the root directory of Easy Rules :</p>
-                <ul>
-                    <li><code>$&gt;mvn install</code></li>
-                    <li><code>$&gt;cd easyrules-samples</code></li>
-                    <li><code>$&gt;mvn exec:java -P runOnlineShopTutorial</code></li>
-                </ul>
-
-                <p>When you run this tutorial, the rule named <code>Suspect Order</code> that we registered will be applied
-                    since the order amount (1200) is greater than the threshold (1000) and the customer 2356 is a new customer. </p>
-
-                <p>We have suspended the execution for 30s to let you change the threshold value at runtime via an y compliant JMX client and see the engine behavior
-                after this change.</p>
-
                 <p>In the next screenshot, we use <a href="http://visualvm.java.net/">VisualVM</a> to change the threshold value :</p>
 
                 <p>
@@ -290,8 +387,8 @@ public interface SuspectOrderJmxManagedRule extends JmxManagedRule {
                 </p>
 
                 <p>If you change the threshold value to 1400 for example within the 30s of program pause, you will see that the rule <code>Suspect Order</code>
-                will not be applied since the order amount (1200) is no longer greater than the new threshold (1400).</p>
-
+                will not be applied the second time since the order amount (1200) is no longer greater than the new threshold (1400).</p>
+				
             </div>
 
         </div>
