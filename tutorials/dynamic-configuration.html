@@ -1,0 +1,349 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <title>Dynamic configuration</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Arizonia' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="http://www.easyrules.org/css/normalize.css" />
+  <link rel="stylesheet" href="http://www.easyrules.org/css/gridism.css" />
+  <link rel="stylesheet" href="http://www.easyrules.org/css/style.css" />
+  <link rel="stylesheet" href="http://www.easyrules.org/css/pygments.css" />
+  <link rel="icon" type="image/x-icon" href="http://www.easyrules.org/favicon.ico" />
+  <script src="http://www.easyrules.org/js/modernizr-2.5.3.min.js"></script>
+</head>
+
+
+<body class="wrap">
+
+  <header>
+  <div class="grid">
+    <div class="unit one-third">
+      <a href="http://www.easyrules.org/index.html">
+        <h1>
+          <span class="shadow">Easy Rules</span>
+        </h1>
+      </a>
+    </div>
+    <nav class="main-nav unit two-thirds">
+      <ul>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+  <li class="">
+    <a href="http://www.easyrules.org/index.html">Home</a>
+  </li>
+  <li class="current">
+    <a href="http://www.easyrules.org/about/overview.html">Documentation</a>
+  </li>
+  <li>
+    <a target="_blank" href="https://github.com/benas/easy-rules">View on GitHub</a>
+  </li>
+</ul>
+
+    </nav>
+  </div>
+</header>
+
+
+    <section class="docs">
+    <div class="grid">
+
+      <div class="unit four-fifths">
+        <article>
+          <h1>Online shop tutorial</h1>
+          <p>In this tutorial, we have an online shop application and we would like to implement the following requirements:</p>
+
+<ol>
+<li>Whenever a new customer places an order with an amount greater than a defined threshold, send an alert about this suspect order to the monitoring team.</li>
+<li>Moreover, the order amount threshold should be reconfigurable via JMX so we can change it at runtime.</li>
+</ol>
+
+<p>In the first part of this tutorial, we will see how to use Easy Rules to implement the business rule described in requirement #1.</p>
+
+<p>In the second part, we will add JMX capability to the business rule developed in part 1 to be able to change the order amount threshold at runtime (requirement #2).</p>
+
+<h2 id="part-1-:-implementing-the-business-rule">Part 1 : Implementing the business rule</h2>
+
+<p>In this application, orders and customers are represented by the <em>Order</em> and <em>Customer</em> classes.</p>
+
+<p>First, let&#39;s implement the rule&#39;s logic by extending the <code>BasicRule</code> class:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SuspectOrderRule</span> <span class="kd">extends</span> <span class="n">BasicRule</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kt">float</span> <span class="n">suspectOrderAmountThreshold</span> <span class="o">=</span> <span class="mi">1000</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="n">Order</span> <span class="n">order</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="n">Customer</span> <span class="n">customer</span><span class="o">;</span>
+
+    <span class="n">SuspectOrderRule</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">String</span> <span class="n">description</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">description</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">evaluateConditions</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">order</span><span class="o">.</span><span class="na">getAmount</span><span class="o">()</span> <span class="o">&gt;</span> <span class="n">suspectOrderAmountThreshold</span>
+                <span class="o">&amp;&amp;</span> <span class="n">customer</span><span class="o">.</span><span class="na">isNew</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">performActions</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">&quot;Alert : A new customer [id=%s] has placed an order [id=%s] with amount %f &gt; %f\n&quot;</span><span class="o">,</span>
+                <span class="n">customer</span><span class="o">.</span><span class="na">getCustomerId</span><span class="o">(),</span> <span class="n">order</span><span class="o">.</span><span class="na">getOrderId</span><span class="o">(),</span> <span class="n">order</span><span class="o">.</span><span class="na">getAmount</span><span class="o">(),</span> <span class="n">suspectOrderAmountThreshold</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="c1">// getters and setters for customer and order fields omitted</span>
+
+<span class="o">}</span>
+</code></pre></div>
+<p>This rule operates on an order and a customer instances which represent the business data to operate on.</p>
+
+<p>The <code>evaluateConditions</code> method evaluates to true when the customer is new and the order amount is greater than the defined threshold.</p>
+
+<p>The <code>performActions</code> method simply writes to the console the specified alert (this could be sending an email or another action in a real use case).</p>
+
+<p>Then, let&#39;s create an Easy Rules engine and register the <code>SuspectOrderRule</code> rule:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">OrderSampleLauncher</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+
+        <span class="n">Order</span> <span class="n">order</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Order</span><span class="o">(</span><span class="mi">6654</span><span class="o">,</span> <span class="mi">1200</span><span class="o">);</span>
+        <span class="n">Customer</span> <span class="n">customer</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Customer</span><span class="o">(</span><span class="mi">2356</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Create a business rule instance</span>
+<span class="cm">         */</span>
+        <span class="n">SuspectOrderRule</span> <span class="n">suspectOrderRule</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">SuspectOrderRule</span><span class="o">(</span>
+                <span class="s">&quot;Suspect Order&quot;</span><span class="o">,</span>
+                <span class="s">&quot;Send alert if a new customer places an order with amount greater than a threshold&quot;</span><span class="o">);</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Set data to operate on</span>
+<span class="cm">         */</span>
+        <span class="n">suspectOrderRule</span><span class="o">.</span><span class="na">setOrder</span><span class="o">(</span><span class="n">order</span><span class="o">);</span>
+        <span class="n">suspectOrderRule</span><span class="o">.</span><span class="na">setCustomer</span><span class="o">(</span><span class="n">customer</span><span class="o">);</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Create a default rules engine and register the business rule</span>
+<span class="cm">         */</span>
+        <span class="n">DefaultRulesEngine</span> <span class="n">rulesEngine</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">DefaultRulesEngine</span><span class="o">();</span>
+        <span class="n">rulesEngine</span><span class="o">.</span><span class="na">registerRule</span><span class="o">(</span><span class="n">suspectOrderRule</span><span class="o">);</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Fire rules</span>
+<span class="cm">         */</span>
+        <span class="n">rulesEngine</span><span class="o">.</span><span class="na">fireRules</span><span class="o">();</span>
+
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>To run this tutorial, you can follow these instructions from the root directory of Easy Rules :</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>mvn install
+<span class="nv">$ </span><span class="nb">cd </span>easyrules-samples
+<span class="nv">$ </span>mvn <span class="nb">exec</span>:java -P runOnlineShopTutorial</code></pre></div>
+
+<p>When you run this tutorial, the rule named <em>Suspect Order</em> that we registered will be applied since the order amount (1200) is greater than the threshold (1000) and the customer 2356 is a new customer.</p>
+
+<h2 id="part-2-:-changing-the-order-amount-threshold-at-runtime">Part 2 : Changing the order amount threshold at runtime</h2>
+
+<p>In this tutorial, we need to expose the order amount threshold as a JMX attribute. So first, let&#39;s define an interface that allows us to change order amount threshold via JMX:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@javax.management.MXBean</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">SuspectOrderJmxRule</span> <span class="kd">extends</span> <span class="n">Rule</span> <span class="o">{</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Get the current suspect order amount threshold</span>
+<span class="cm">     * @return current suspect order amount threshold</span>
+<span class="cm">     */</span>
+    <span class="kt">float</span> <span class="nf">getSuspectOrderAmountThreshold</span><span class="o">();</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Set the suspect order amount threshold</span>
+<span class="cm">     * @param suspectOrderAmountThreshold the new suspect order amount threshold</span>
+<span class="cm">     */</span>
+    <span class="kt">void</span> <span class="nf">setSuspectOrderAmountThreshold</span><span class="o">(</span><span class="kt">float</span> <span class="n">suspectOrderAmountThreshold</span><span class="o">);</span>
+
+<span class="o">}</span>
+</code></pre></div>
+<p>Then, we should make our <code>SuspectOrderRule</code> implement the <code>SuspectOrderJmxRule</code> interface to expose the order amount threshold as a JMX attribute.</p>
+
+<p>So here is the new <code>SuspectOrderRule</code> class:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SuspectOrderRule</span> <span class="kd">extends</span> <span class="n">BasicRule</span> <span class="kd">implements</span> <span class="n">SuspectOrderJmxRule</span> <span class="o">{</span>
+
+    <span class="c1">// same implementation of the rule</span>
+
+    <span class="kd">public</span> <span class="kt">float</span> <span class="nf">getSuspectOrderAmountThreshold</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">suspectOrderAmountThreshold</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setSuspectOrderAmountThreshold</span><span class="o">(</span><span class="kt">float</span> <span class="n">suspectOrderAmountThreshold</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">suspectOrderAmountThreshold</span> <span class="o">=</span> <span class="n">suspectOrderAmountThreshold</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div>
+<p>Finally, let&#39;s suspend the program to change the order amount threshold value at runtime via any compliant JMX client and see the engine behavior after this change:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">OrderSampleLauncher</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+
+        <span class="n">Order</span> <span class="n">order</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Order</span><span class="o">(</span><span class="mi">6654</span><span class="o">,</span> <span class="mi">1200</span><span class="o">);</span>
+        <span class="n">Customer</span> <span class="n">customer</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Customer</span><span class="o">(</span><span class="mi">2356</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Create a business rule instance</span>
+<span class="cm">         */</span>
+        <span class="n">SuspectOrderRule</span> <span class="n">suspectOrderRule</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">SuspectOrderRule</span><span class="o">(</span>
+                <span class="s">&quot;Suspect Order&quot;</span><span class="o">,</span>
+                <span class="s">&quot;Send alert if a new customer places an order with amount greater than a threshold&quot;</span><span class="o">);</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Set data to operate on</span>
+<span class="cm">         */</span>
+        <span class="n">suspectOrderRule</span><span class="o">.</span><span class="na">setOrder</span><span class="o">(</span><span class="n">order</span><span class="o">);</span>
+        <span class="n">suspectOrderRule</span><span class="o">.</span><span class="na">setCustomer</span><span class="o">(</span><span class="n">customer</span><span class="o">);</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Create a default rules engine and register the business rule</span>
+<span class="cm">         */</span>
+        <span class="n">DefaultRulesEngine</span> <span class="n">rulesEngine</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">DefaultRulesEngine</span><span class="o">();</span>
+        <span class="n">rulesEngine</span><span class="o">.</span><span class="na">registerJmxRule</span><span class="o">(</span><span class="n">suspectOrderRule</span><span class="o">);</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Fire rules</span>
+<span class="cm">         */</span>
+        <span class="n">rulesEngine</span><span class="o">.</span><span class="na">fireRules</span><span class="o">();</span>
+
+        <span class="c1">// Update suspect order amount threshold via a JMX client.</span>
+        <span class="n">Scanner</span> <span class="n">scanner</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Change suspect order amount threshold to a value &gt; 1200 via a JMX client and then press enter&quot;</span><span class="o">);</span>
+        <span class="n">scanner</span><span class="o">.</span><span class="na">nextLine</span><span class="o">();</span>
+
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;**************************************************************&quot;</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Re fire rules after updating suspect order amount threshold...&quot;</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;**************************************************************&quot;</span><span class="o">);</span>
+
+        <span class="n">rulesEngine</span><span class="o">.</span><span class="na">fireRules</span><span class="o">();</span>
+
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>In the next screenshot, we use VisualVM to change the threshold value:</p>
+
+<p><img style="width: 100%" src="http://www.easyrules.org/img/jmx-suspectOrderRule.png"></p>
+
+<p>If you change the threshold value to 1400 for example, you will see that the rule <em>Suspect Order</em> will not be applied the second time since the order amount (1200) is no longer greater than the new threshold (1400).</p>
+
+<p>That&#39;s all! In this tutorial, we have seen how to create a real business rule with Easy Rules and how to reconfigure it at runtime.</p>
+
+          <div class="section-nav">
+  <div class="left align-right">
+    
+      <a href="http://www.easyrules.org/tutorials/hello-world.html" class="prev">
+        Back
+      </a>
+    
+  </div>
+  <div class="right align-left">
+    
+      <span class="next disabled">Next</span>
+    
+  </div>
+  <div class="clear"></div>
+</div>
+
+
+        </article>
+      </div>
+
+      <div class="unit one-fifth">
+  <aside>
+
+    <h4>About Easy Rules</h4>
+    <ul>
+      <li class="">
+        <a href="http://www.easyrules.org/about/overview.html">Overview</a>
+      </li>
+      <li class="">
+        <a href="http://www.easyrules.org/about/getting-started.html">Getting started</a>
+      </li>
+    </ul>
+
+    <h4>User guide</h4>
+      <ul>
+          <li class="">
+            <a href="http://www.easyrules.org/user-guide/introduction.html">Introduction</a>
+          </li>
+          <li class="">
+            <a href="http://www.easyrules.org/user-guide/defining-rules.html">Defining rules</a>
+          </li>
+          <li class="">
+            <a href="http://www.easyrules.org/user-guide/rules-engine.html">Rules engine</a>
+          </li>
+          <li class="">
+            <a href="http://www.easyrules.org/user-guide/managing-rules.html">Managing rules</a>
+          </li>
+      </ul>
+
+      <h4>Tutorials</h4>
+      <ul>
+          <li class="">
+            <a href="http://www.easyrules.org/tutorials/hello-world.html">Hello World</a>
+          </li>
+          <li class="current">
+            <a href="http://www.easyrules.org/tutorials/dynamic-configuration.html">Dynamic configuration</a>
+          </li>
+      </ul>
+
+
+
+    <h4>Get involved</h4>
+    <ul>
+        <li>
+            <a target="_blank" href="https://github.com/benas/easy-rules">Source repository</a>
+        </li>
+        <li>
+            <a target="_blank" href="https://github.com/benas/easy-rules/issues">Issue tracker</a>
+        </li>
+    </ul>
+
+  </aside>
+</div>
+
+
+      <div class="clear"></div>
+
+    </div>
+  </section>
+
+
+  <footer>
+  <div class="grid">
+    <div class="unit one-third center-on-mobiles">
+      <p>Project created and maintained by <a target="_blank" href="http://www.mahmoudbenhassine.com">Mahmoud Ben Hassine</a>.</p>
+    </div>
+    <div class="unit two-thirds align-right center-on-mobiles">
+      <p>
+        Inspired by and built with <a target="_blank" href="http://jekyllrb.com">Jekyll</a>. Hosted on <a target="_blank" href="https://github.com">Github</a>.
+      </p>
+
+    </div>
+  </div>
+</footer>
+
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-46301888-1']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</body>
+
+</html>
+

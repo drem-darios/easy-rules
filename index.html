@@ -1,134 +1,169 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html lang="en-US">
 <head>
-    <title>Easy Rules</title>
-    <meta charset="utf-8">
-    <meta name="description" content="Easy Rules is a simple yet powerful Java Rules Engine">
-    <meta name="author" content="Mahmoud Ben Hassine">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="img/gear.ico"/>
-    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <link href="css/offcanvas.css" rel="stylesheet" media="screen">
-    <link href="css/font-awesome.min.css" rel="stylesheet">
-    <link href="css/idea.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>Easy rules &bull; Xml-free open source Java&trade; rules engine.</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Arizonia' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="http://www.easyrules.org/css/normalize.css" />
+  <link rel="stylesheet" href="http://www.easyrules.org/css/gridism.css" />
+  <link rel="stylesheet" href="http://www.easyrules.org/css/style.css" />
+  <link rel="stylesheet" href="http://www.easyrules.org/css/pygments.css" />
+  <link rel="icon" type="image/x-icon" href="http://www.easyrules.org/favicon.ico" />
+  <script src="http://www.easyrules.org/js/modernizr-2.5.3.min.js"></script>
+</head>
+
+
+<body class="wrap">
+
+  <header>
+  <div class="grid">
+    <div class="unit one-third">
+      <a href="http://www.easyrules.org/index.html">
+        <h1>
+          <span class="shadow">Easy Rules</span>
+        </h1>
+      </a>
+    </div>
+    <nav class="main-nav unit two-thirds">
+      <ul>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+  <li class="current">
+    <a href="http://www.easyrules.org/index.html">Home</a>
+  </li>
+  <li class="">
+    <a href="http://www.easyrules.org/about/overview.html">Documentation</a>
+  </li>
+  <li>
+    <a target="_blank" href="https://github.com/benas/easy-rules">View on GitHub</a>
+  </li>
+</ul>
+
+    </nav>
+  </div>
+</header>
+
+
+  <section class="intro">
+    <div class="grid">
+        <div class="unit whole">
+            <p class="first">Xml-free open source Java™ rules engine.</p>
+        </div>
+    </div>
+</section>
+
+<section class="features">
+    <div class="grid">
+        <div class="unit one-third">
+            <h2>Lightweight</h2>
+            <p>
+                A tiny jar with no dependencies and a lot of features!
+            </p>
+            <a href="http://www.easyrules.org/about/getting-started.html" class="">Get started &rarr;</a>
+        </div>
+        <div class="unit one-third">
+            <h2>POJO based</h2>
+            <p>
+                Turn your POJOs into business rules with a couple of annotations.
+            </p>
+            <a href="http://www.easyrules.org/about/overview.html" class="">Read documentation &rarr;</a>
+        </div>
+        <div class="unit one-third">
+            <h2>Simple yet powerful</h2>
+            <p>
+                Easy rules provides a simple API to get you up and running quickly.
+            </p>
+            <a href="http://www.easyrules.org/tutorials/hello-world.html" class="">2 minutes tutorial &rarr;</a>
+        </div>
+        <div class="clear"></div>
+    </div>
+</section>
+
+<section class="quickstart">
+    <div class="grid">
+        <div class="unit code" style="width: 50%">
+            <p class="title">Then, fire it!</p>
+            <div class="shell">
+                <div class="highlight"><pre><code class="language-java" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: 16px"><span class="kd">public class</span> <span class="nc">Test</span> <span class="o">{</span>
+    <span class="kd">public static void</span> <span class="nf">main</span><span class="o">(</span>String<span class="o">[]</span> args<span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// create a rules engine</span>
+        AnnotatedRulesEngine rulesEngine <span class="o">=</span>
+                            <span class="k">new</span> AnnotatedRulesEngine<span class="o">();</span>
+        <span class="c1">//register the rule</span>
+        rulesEngine<span class="o">.</span><span class="na">registerRule</span><span class="o">(</span><span class="k">new</span> MyRule<span class="o">());</span>
+        <span class="c1">//fire rules!</span>
+        rulesEngine<span class="o">.</span><span class="na">fireRules</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></div>
+            </div>
+        </div>
+        <div class="unit code" style="width: 50%">
+            <p class="title">First, define your rule..</p>
+            <div class="shell">
+                <div class="highlight"><pre><code class="language-java" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: 16px"><span class="nd">@Rule</span> <span class="o">(</span>name <span class="o">=</span> <span class="s">"my awesome rule"</span> <span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyRule</span> <span class="o">{</span>
+    <span class="nd">@Condition</span>
+    <span class="kd">public boolean</span> <span class="nf">when</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> true<span class="o">;</span>
+    <span class="o">}</span>
+    <span class="nd">@Action</span>
+    <span class="kd">public void</span> <span class="nf">then</span><span class="o">()</span> <span class="o">{</span>
+        System<span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Easy Rules rocks!"</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></div>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+</section>
+
+<section class="free-hosting">
+    <div class="grid">
+        <div class="unit whole">
+            <div class="grid pane">
+                <div class="unit whole center-on-mobiles">
+                    <div class="pane-content">
+                        <h2>License</h2>
+                        <p>Easy Rules is open source, hosted on <a target="_blank" href="https://github.com/benas/easy-rules">GitHub</a> and is released under the <a target="_blank" href="http://opensource.org/licenses/mit-license.php/">MIT License</a>.</p>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+  <footer>
+  <div class="grid">
+    <div class="unit one-third center-on-mobiles">
+      <p>Project created and maintained by <a target="_blank" href="http://www.mahmoudbenhassine.com">Mahmoud Ben Hassine</a>.</p>
+    </div>
+    <div class="unit two-thirds align-right center-on-mobiles">
+      <p>
+        Inspired by and built with <a target="_blank" href="http://jekyllrb.com">Jekyll</a>. Hosted on <a target="_blank" href="https://github.com">Github</a>.
+      </p>
+
+    </div>
+  </div>
+</footer>
 
     <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-46301888-1']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
 
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-46301888-1']);
-        _gaq.push(['_trackPageview']);
 
-        (function() {
-            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        })();
-
-    </script>
-
-</head>
-<body>
-
-<div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
-
-    <div class="container">
-
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="index.html"><i class="fa fa-gears"></i> Easy Rules</a>
-        </div>
-        <div class="collapse navbar-collapse">
-            <p class="navbar-text pull-right">Version: 1.0.1</p>
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
-                <li><a href="gettingStarted.html"><i class="fa fa-folder-open"></i> Getting started</a></li>
-                <li><a href="documentation.html"><i class="fa fa-book"></i> Documentation</a></li>
-                <li><a href="tutorials.html"><i class="fa fa-flask"></i> Tutorials</a></li>
-            </ul>
-        </div>
-    </div>
-</div>
-
-<div class="container">
-
-    <div class="row row-offcanvas row-offcanvas-right">
-
-        <div class="col-xs-12 col-sm-9">
-
-            <div class="row">
-
-                <h2 >What is Easy Rules?</h2>
-
-                <p>Easy Rules is a simple yet powerful Java Rules Engine providing the following features :</p>
-
-                <ul>
-                    <li><p>Lightweight framework and easy to learn API</p></li>
-                    <li><p>Useful abstractions to define business rules and apply them easily using Java</p></li>
-                    <li><p>The ability to create composite rules from primitive ones</p></li>
-                    <li><p>Dynamic rule configuration at runtime using JMX</p></li>
-                </ul>
-
-                <p>In a very interesting <a href="http://martinfowler.com/bliki/RulesEngine.html">article</a> about rules engines, Martin Fowler says the following :</p>
-                <blockquote>
-                    <p>You can build a simple rules engine yourself. All you need is to create a bunch of objects with conditions and actions,
-                        store them in a collection, and run through them to evaluate the conditions and execute the actions.</p>
-                    <small><a href="http://martinfowler.com/bliki/RulesEngine.html">Martin Fowler</a></small>
-                </blockquote>
-
-                <p>This is exactly what Easy Rules does, with more features like rule composition and dynamic configuration.</p>
-
-            </div>
-
-            <div class="row">
-
-                <h1>Presentation</h1>
-
-                <p>You can find some slides about Easy Rules on speaker deck <a href="https://speakerdeck.com/benas/easy-rules">here</a>.</p>
-
-            </div>
-
-            <div class="row">
-
-                <h1>License</h1>
-
-                <p>Easy Rules is released under the <a href="http://opensource.org/licenses/mit-license.php/" target="_blank">MIT License</a>.</p>
-            </div>
-
-        </div>
-
-        <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
-            <div class="list-group">
-                <a href="index.html" class="list-group-item active"><i class="fa fa-home"></i> Home</a>
-                <a href="gettingStarted.html" class="list-group-item"><i class="fa fa-folder-open"></i> Getting started</a>
-                <a href="documentation.html" class="list-group-item"><i class="fa fa-book"></i> Documentation</a>
-                <a href="tutorials.html" class="list-group-item"><i class="fa fa-flask"></i> Tutorials</a>
-            </div>
-        </div>
-
-    </div>
-
-    <hr>
-
-    <footer>
-        <div class="container">
-            <p class="pull-right"><a href="#"><i class="fa fa-arrow-up"></i> Back to top</a></p>
-
-            <p>Easy Rules is maintained by <a href="mailto:md.benhassine@gmail.com?subject=[Easy Rules]"><i
-                    class="fa fa-envelope"></i> benas</a> at <a href="https://github.com/benas/easy-rules"><i
-                    class="fa fa-github-alt"></i> Github</a></p>
-        </div>
-    </footer>
-
-</div>
-<script src="js/jquery-1.10.2.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/offcanvas.js"></script>
-<script src="js/highlight.pack.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
 </body>
+
 </html>
+

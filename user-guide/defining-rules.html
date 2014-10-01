@@ -1,0 +1,278 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <title>Defining rules</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Arizonia' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="http://www.easyrules.org/css/normalize.css" />
+  <link rel="stylesheet" href="http://www.easyrules.org/css/gridism.css" />
+  <link rel="stylesheet" href="http://www.easyrules.org/css/style.css" />
+  <link rel="stylesheet" href="http://www.easyrules.org/css/pygments.css" />
+  <link rel="icon" type="image/x-icon" href="http://www.easyrules.org/favicon.ico" />
+  <script src="http://www.easyrules.org/js/modernizr-2.5.3.min.js"></script>
+</head>
+
+
+<body class="wrap">
+
+  <header>
+  <div class="grid">
+    <div class="unit one-third">
+      <a href="http://www.easyrules.org/index.html">
+        <h1>
+          <span class="shadow">Easy Rules</span>
+        </h1>
+      </a>
+    </div>
+    <nav class="main-nav unit two-thirds">
+      <ul>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+  <li class="">
+    <a href="http://www.easyrules.org/index.html">Home</a>
+  </li>
+  <li class="current">
+    <a href="http://www.easyrules.org/about/overview.html">Documentation</a>
+  </li>
+  <li>
+    <a target="_blank" href="https://github.com/benas/easy-rules">View on GitHub</a>
+  </li>
+</ul>
+
+    </nav>
+  </div>
+</header>
+
+
+    <section class="docs">
+    <div class="grid">
+
+      <div class="unit four-fifths">
+        <article>
+          <h1>Defining rules</h1>
+          <p>The key API in Easy Rules is the <code>Rule</code> interface:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Rule</span> <span class="o">{</span>
+
+    <span class="cm">/**</span>
+<span class="cm">    * This method encapsulates the rule&#39;s conditions.</span>
+<span class="cm">    * @return true if the rule should be applied, false else</span>
+<span class="cm">    */</span>
+    <span class="kt">boolean</span> <span class="nf">evaluateConditions</span><span class="o">();</span>
+
+    <span class="cm">/**</span>
+<span class="cm">    * This method encapsulates the rule&#39;s actions.</span>
+<span class="cm">    * @throws Exception thrown if an exception occurs</span>
+<span class="cm">    * during actions performing</span>
+<span class="cm">    */</span>
+    <span class="kt">void</span> <span class="nf">performActions</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">;</span>
+
+    <span class="c1">//Getters and setters for rule name,</span>
+    <span class="c1">//description and priority omitted.</span>
+
+<span class="o">}</span>
+</code></pre></div>
+<p>The <code>evaluateConditions</code> method encapsulates conditions that must evaluate to <em>TRUE</em> to trigger the rule.</p>
+
+<p>The <code>performActions</code> method encapsulates actions that should be performed when rule&#39;s conditions are satisfied.</p>
+
+<h2 id="defining-rules-by-extending-basicrule">Defining rules by extending <em>BasicRule</em></h2>
+
+<p>Easy Rules provides a simple implementation of the <code>Rule</code> interface named <code>BasicRule</code>. This class implements most of methods
+defined in the <code>Rule</code> interface. You can extends this class and override <code>evaluateConditions</code> and
+<code>performActions</code> methods to provide your conditions and actions logic. Here is an example:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyRule</span> <span class="kd">extends</span> <span class="n">BasicRule</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="n">BusinessData</span> <span class="n">myBusinessData</span><span class="o">;</span> <span class="c1">//data to operate on</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">evaluateConditions</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">//my rule conditions</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">performActions</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="c1">//my actions</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div>
+<h2 id="defining-rules-using-annotations">Defining rules using annotations</h2>
+
+<p>Easy Rules provides the <code>@Rule</code> annotation that can turn a POJO into a rule. Here is an example:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Rule</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;my rule&quot;</span><span class="o">,</span> <span class="n">description</span> <span class="o">=</span> <span class="s">&quot;my rule description&quot;</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyRule</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="n">BusinessData</span> <span class="n">myBusinessData</span><span class="o">;</span> <span class="c1">//data to operate on</span>
+
+    <span class="nd">@Condition</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">checkConditions</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">//my rule conditions</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Action</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">performActions</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="c1">//my actions</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div>
+<p>You can use <code>@Condition</code> and <code>@Action</code> annotations to mark methods to execute to check rule conditions and perform rule actions
+respectively.</p>
+
+<div class="note info">
+  <h5>Rules can have multiple actions</h5>
+  <p>You can annotate multiple methods with the <em>Action</em> annotation. You can also define the execution order of actions with the
+  <em>order</em> attribute: <em>@Action(order = 1)</em>.</p>
+</div>
+
+<h2 id="composite-rules">Composite rules</h2>
+
+<p>Easy Rules allows you to create complex rules from primitive ones. A <code>CompositeRule</code> is composed of a set of rules.</p>
+
+<p>This is typically an implementation of the <a href="http://en.wikipedia.org/wiki/Composite_pattern">composite design pattern</a>.</p>
+
+<p>A composite rule is triggered if <em>all</em> conditions of its composing rules are satisfied.
+When a composite rule is applied, actions of <em>all</em> composing rules are performed in the natural order of
+rules which is rules priorities by default.</p>
+
+<p>To create a composite rule from two primitive rules, you can use the following snippet:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="c1">//Create the composite rule from two primitive rules</span>
+<span class="n">CompositeRule</span> <span class="n">myCompositeRule</span> <span class="o">=</span>
+    <span class="k">new</span> <span class="nf">CompositeRule</span><span class="o">(</span><span class="s">&quot;myCompositeRule&quot;</span><span class="o">,</span> <span class="s">&quot;a composite rule&quot;</span><span class="o">);</span>
+<span class="n">myCompositeRule</span><span class="o">.</span><span class="na">addRule</span><span class="o">(</span><span class="n">myRule1</span><span class="o">);</span>
+<span class="n">myCompositeRule</span><span class="o">.</span><span class="na">addRule</span><span class="o">(</span><span class="n">myRule2</span><span class="o">);</span>
+
+<span class="c1">//Register the composite rule as a regular rule</span>
+<span class="n">RulesEngine</span> <span class="n">rulesEngine</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">DefaultRulesEngine</span><span class="o">();</span>
+<span class="n">rulesEngine</span><span class="o">.</span><span class="na">registerRule</span><span class="o">(</span><span class="n">myCompositeRule</span><span class="o">);</span>
+</code></pre></div>
+<h2 id="rules-priorities">Rules priorities</h2>
+
+<p>Each rule in Easy Rules has a priority. This represents the default order in which registered rules are fired.
+ By default, lower values represent higher priorities.
+ To override this behavior, you should override the <code>compareTo</code> method to provide a custom priority strategy.</p>
+
+<ul>
+<li><p>If you decided to extend the <code>BasicRule</code> class, you can specify rule priority at construction time or by overriding
+the <code>getPriority()</code> method</p></li>
+<li><p>If your rule is a annotated POJO, you should annotate the method that provides priority with <code>@Priority</code> annotation.
+This method must be public, have no arguments and return an Integer type</p></li>
+</ul>
+
+          <div class="section-nav">
+  <div class="left align-right">
+    
+      <a href="http://www.easyrules.org/user-guide/introduction.html" class="prev">
+        Back
+      </a>
+    
+  </div>
+  <div class="right align-left">
+    
+      <a href="http://www.easyrules.org/user-guide/rules-engine.html" class="next">
+        Next
+      </a>
+    
+  </div>
+  <div class="clear"></div>
+</div>
+
+
+        </article>
+      </div>
+
+      <div class="unit one-fifth">
+  <aside>
+
+    <h4>About Easy Rules</h4>
+    <ul>
+      <li class="">
+        <a href="http://www.easyrules.org/about/overview.html">Overview</a>
+      </li>
+      <li class="">
+        <a href="http://www.easyrules.org/about/getting-started.html">Getting started</a>
+      </li>
+    </ul>
+
+    <h4>User guide</h4>
+      <ul>
+          <li class="">
+            <a href="http://www.easyrules.org/user-guide/introduction.html">Introduction</a>
+          </li>
+          <li class="current">
+            <a href="http://www.easyrules.org/user-guide/defining-rules.html">Defining rules</a>
+          </li>
+          <li class="">
+            <a href="http://www.easyrules.org/user-guide/rules-engine.html">Rules engine</a>
+          </li>
+          <li class="">
+            <a href="http://www.easyrules.org/user-guide/managing-rules.html">Managing rules</a>
+          </li>
+      </ul>
+
+      <h4>Tutorials</h4>
+      <ul>
+          <li class="">
+            <a href="http://www.easyrules.org/tutorials/hello-world.html">Hello World</a>
+          </li>
+          <li class="">
+            <a href="http://www.easyrules.org/tutorials/dynamic-configuration.html">Dynamic configuration</a>
+          </li>
+      </ul>
+
+
+
+    <h4>Get involved</h4>
+    <ul>
+        <li>
+            <a target="_blank" href="https://github.com/benas/easy-rules">Source repository</a>
+        </li>
+        <li>
+            <a target="_blank" href="https://github.com/benas/easy-rules/issues">Issue tracker</a>
+        </li>
+    </ul>
+
+  </aside>
+</div>
+
+
+      <div class="clear"></div>
+
+    </div>
+  </section>
+
+
+  <footer>
+  <div class="grid">
+    <div class="unit one-third center-on-mobiles">
+      <p>Project created and maintained by <a target="_blank" href="http://www.mahmoudbenhassine.com">Mahmoud Ben Hassine</a>.</p>
+    </div>
+    <div class="unit two-thirds align-right center-on-mobiles">
+      <p>
+        Inspired by and built with <a target="_blank" href="http://jekyllrb.com">Jekyll</a>. Hosted on <a target="_blank" href="https://github.com">Github</a>.
+      </p>
+
+    </div>
+  </div>
+</footer>
+
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-46301888-1']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</body>
+
+</html>
+

@@ -1,0 +1,257 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <title>Hello World</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Arizonia' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="http://www.easyrules.org/css/normalize.css" />
+  <link rel="stylesheet" href="http://www.easyrules.org/css/gridism.css" />
+  <link rel="stylesheet" href="http://www.easyrules.org/css/style.css" />
+  <link rel="stylesheet" href="http://www.easyrules.org/css/pygments.css" />
+  <link rel="icon" type="image/x-icon" href="http://www.easyrules.org/favicon.ico" />
+  <script src="http://www.easyrules.org/js/modernizr-2.5.3.min.js"></script>
+</head>
+
+
+<body class="wrap">
+
+  <header>
+  <div class="grid">
+    <div class="unit one-third">
+      <a href="http://www.easyrules.org/index.html">
+        <h1>
+          <span class="shadow">Easy Rules</span>
+        </h1>
+      </a>
+    </div>
+    <nav class="main-nav unit two-thirds">
+      <ul>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+  <li class="">
+    <a href="http://www.easyrules.org/index.html">Home</a>
+  </li>
+  <li class="current">
+    <a href="http://www.easyrules.org/about/overview.html">Documentation</a>
+  </li>
+  <li>
+    <a target="_blank" href="https://github.com/benas/easy-rules">View on GitHub</a>
+  </li>
+</ul>
+
+    </nav>
+  </div>
+</header>
+
+
+    <section class="docs">
+    <div class="grid">
+
+      <div class="unit four-fifths">
+        <article>
+          <h1>Hello World tutorial</h1>
+          <p>This tutorial shows how to use Easy Rules on a very simple application.
+ The program should ask the user if he is a friend of duke and says &#39;Hello duke&#39;s friend!&#39; only if he replies &#39;yes&#39;.</p>
+
+<p>Based on this requirement, the rule is pretty straightforward :</p>
+
+<ul>
+<li>The condition is that the user input must be equal to &#39;yes&#39;</li>
+<li>The action is to say &#39;Hello duke&#39;s friend!&#39; to the user</li>
+</ul>
+
+<p>First, let&#39;s create a rule class:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Rule</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;Hello World rule&quot;</span><span class="o">,</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s">&quot;Say Hello to only duke&#39;s friends&quot;</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloWorldRule</span> <span class="o">{</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * The user input which represents the data</span>
+<span class="cm">     * that the rule will operate on.</span>
+<span class="cm">     */</span>
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">input</span><span class="o">;</span>
+
+    <span class="nd">@Condition</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">checkInput</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">//The rule should be applied only if</span>
+        <span class="c1">//the user&#39;s response is yes (duke friend)</span>
+        <span class="k">return</span> <span class="n">input</span><span class="o">.</span><span class="na">equalsIgnoreCase</span><span class="o">(</span><span class="s">&quot;yes&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Action</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">sayHelloToDukeFriend</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="c1">//When rule conditions are satisfied,</span>
+        <span class="c1">//prints &#39;Hello duke&#39;s friend!&#39; to the console</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Hello duke&#39;s friend!&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setInput</span><span class="o">(</span><span class="n">String</span> <span class="n">input</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">input</span> <span class="o">=</span> <span class="n">input</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div>
+<p>Then, we have to register an instance of this rule to an Easy Rules engine and launch the program with the following class :</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloWorldSampleLauncher</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+
+        <span class="n">Scanner</span> <span class="n">scanner</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Are you a friend of duke?[yes/no]:&quot;</span><span class="o">);</span>
+        <span class="n">String</span> <span class="n">input</span> <span class="o">=</span> <span class="n">scanner</span><span class="o">.</span><span class="na">nextLine</span><span class="o">();</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Declare the rule</span>
+<span class="cm">         */</span>
+        <span class="n">HelloWorldRule</span> <span class="n">helloWorldRule</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HelloWorldRule</span><span class="o">();</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Set business data to operate on</span>
+<span class="cm">         */</span>
+        <span class="n">helloWorldRule</span><span class="o">.</span><span class="na">setInput</span><span class="o">(</span><span class="n">input</span><span class="o">.</span><span class="na">trim</span><span class="o">());</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Create a rules engine and register the business rule</span>
+<span class="cm">         */</span>
+        <span class="n">AnnotatedRulesEngine</span> <span class="n">rulesEngine</span> <span class="o">=</span>
+                                <span class="k">new</span> <span class="nf">AnnotatedRulesEngine</span><span class="o">();</span>
+        <span class="n">rulesEngine</span><span class="o">.</span><span class="na">registerRule</span><span class="o">(</span><span class="n">helloWorldRule</span><span class="o">);</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Fire rules</span>
+<span class="cm">         */</span>
+        <span class="n">rulesEngine</span><span class="o">.</span><span class="na">fireRules</span><span class="o">();</span>
+
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>To run this tutorial, you can follow these instructions from the root directory of Easy Rules :</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>mvn install
+<span class="nv">$ </span><span class="nb">cd </span>easyrules-samples
+<span class="nv">$ </span>mvn <span class="nb">exec</span>:java -P runHelloWorldTutorial</code></pre></div>
+
+<p>If you run this tutorial, you would get the following output:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">Are you a friend of duke? [yes/no]:
+yes
+10 sep. 2014 13:26:19 io.github.benas.easyrules.core.DefaultRulesEngine fireRules
+INFO: Rule &#39;Hello World rule&#39; triggered.
+Hello duke&#39;s friend!
+10 sep. 2014 13:26:19 io.github.benas.easyrules.core.DefaultRulesEngine fireRules
+INFO: Rule &#39;Hello World rule&#39; performed successfully.
+</code></pre></div>
+          <div class="section-nav">
+  <div class="left align-right">
+    
+      <a href="http://www.easyrules.org/user-guide/managing-rules.html" class="prev">
+        Back
+      </a>
+    
+  </div>
+  <div class="right align-left">
+    
+      <a href="http://www.easyrules.org/tutorials/dynamic-configuration.html" class="next">
+        Next
+      </a>
+    
+  </div>
+  <div class="clear"></div>
+</div>
+
+
+        </article>
+      </div>
+
+      <div class="unit one-fifth">
+  <aside>
+
+    <h4>About Easy Rules</h4>
+    <ul>
+      <li class="">
+        <a href="http://www.easyrules.org/about/overview.html">Overview</a>
+      </li>
+      <li class="">
+        <a href="http://www.easyrules.org/about/getting-started.html">Getting started</a>
+      </li>
+    </ul>
+
+    <h4>User guide</h4>
+      <ul>
+          <li class="">
+            <a href="http://www.easyrules.org/user-guide/introduction.html">Introduction</a>
+          </li>
+          <li class="">
+            <a href="http://www.easyrules.org/user-guide/defining-rules.html">Defining rules</a>
+          </li>
+          <li class="">
+            <a href="http://www.easyrules.org/user-guide/rules-engine.html">Rules engine</a>
+          </li>
+          <li class="">
+            <a href="http://www.easyrules.org/user-guide/managing-rules.html">Managing rules</a>
+          </li>
+      </ul>
+
+      <h4>Tutorials</h4>
+      <ul>
+          <li class="current">
+            <a href="http://www.easyrules.org/tutorials/hello-world.html">Hello World</a>
+          </li>
+          <li class="">
+            <a href="http://www.easyrules.org/tutorials/dynamic-configuration.html">Dynamic configuration</a>
+          </li>
+      </ul>
+
+
+
+    <h4>Get involved</h4>
+    <ul>
+        <li>
+            <a target="_blank" href="https://github.com/benas/easy-rules">Source repository</a>
+        </li>
+        <li>
+            <a target="_blank" href="https://github.com/benas/easy-rules/issues">Issue tracker</a>
+        </li>
+    </ul>
+
+  </aside>
+</div>
+
+
+      <div class="clear"></div>
+
+    </div>
+  </section>
+
+
+  <footer>
+  <div class="grid">
+    <div class="unit one-third center-on-mobiles">
+      <p>Project created and maintained by <a target="_blank" href="http://www.mahmoudbenhassine.com">Mahmoud Ben Hassine</a>.</p>
+    </div>
+    <div class="unit two-thirds align-right center-on-mobiles">
+      <p>
+        Inspired by and built with <a target="_blank" href="http://jekyllrb.com">Jekyll</a>. Hosted on <a target="_blank" href="https://github.com">Github</a>.
+      </p>
+
+    </div>
+  </div>
+</footer>
+
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-46301888-1']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</body>
+
+</html>
+
