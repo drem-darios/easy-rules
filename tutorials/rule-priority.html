@@ -1,0 +1,317 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <title>Rule Priority</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="author" content="Mahmoud Ben Hassine">
+  <meta name="description" content="Open source java rules engine">
+  <meta name="keywords" content="java, rules engine, open source">
+  <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Arizonia' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="http://www.easyrules.org/css/normalize.css" />
+  <link rel="stylesheet" href="http://www.easyrules.org/css/gridism.css" />
+  <link rel="stylesheet" href="http://www.easyrules.org/css/style.css" />
+  <link rel="stylesheet" href="http://www.easyrules.org/css/pygments.css" />
+  <link rel="icon" type="image/x-icon" href="http://www.easyrules.org/favicon.ico" />
+  <script src="http://www.easyrules.org/js/modernizr-2.5.3.min.js"></script>
+</head>
+
+
+<body class="wrap">
+
+  <header>
+  <div class="grid">
+    <div class="unit one-third">
+      <a href="http://www.easyrules.org/index.html">
+        <h1>
+          <span class="shadow">Easy Rules</span>
+        </h1>
+      </a>
+    </div>
+    <nav class="main-nav unit two-thirds">
+      <ul>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+  <li class="">
+    <a href="http://www.easyrules.org/index.html">Home</a>
+  </li>
+  <li class="current">
+    <a href="http://www.easyrules.org/about/overview.html">Documentation</a>
+  </li>
+  <li>
+    <a target="_blank" href="https://github.com/benas/easy-rules">View on GitHub</a>
+  </li>
+</ul>
+
+    </nav>
+  </div>
+</header>
+
+
+    <section class="docs">
+    <div class="grid">
+
+      <div class="unit four-fifths">
+        <article>
+          <h1>Rule Priority tutorial</h1>
+          <p>This tutorial shows how define priority in which rules must be fired.
+In Easy Rules, every rule has a priority. Rules are fired by default according to their priorities (this can be changed as described in the <a href="http://www.easyrules.org/user-guide/defining-rules.html#rules-priorities">user guide</a>).</p>
+
+<p>In this tutorial, we have an application that sells alcohol. The application must flag the customer as adult if his age is greater than 18,
+and must deny children from buying alcohol. Customers are represented by the following <code>Person</code> class:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Person</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">age</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">adult</span><span class="o">;</span>
+
+    <span class="c1">//getters and setters omitted</span>
+
+<span class="o">}</span>
+</code></pre></div>
+<p>Based on these requirements, we can define the following rules:</p>
+
+<ul>
+<li>Rule 1: This rule should operate an a <code>Person</code> instance, check that the peron age is greater than 18 and set the adult flag.</li>
+<li>Rule 2: This rule should operate an a <code>Person</code> instance, check that the peron is adult and deny children (ie, non adult) from buying alcohol.</li>
+</ul>
+
+<p>Rule 1 should be fired <strong><em>before</em></strong> rule 2. We will set rule 1 priority to 1 and rule 2 priority to 2 so that Easy Rules engine fire them in this order.</p>
+
+<p>First, let&#39;s create a class for rule 1:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Rule</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;AgeRule&quot;</span><span class="o">,</span>
+      <span class="n">description</span> <span class="o">=</span> <span class="s">&quot;Check if person&#39;s age is &gt; 18</span>
+<span class="s">                     and marks the person as adult&quot;</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">AgeRule</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="n">Person</span> <span class="n">person</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">adultAge</span> <span class="o">=</span> <span class="mi">18</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">AgeRule</span><span class="o">(</span><span class="n">Person</span> <span class="n">person</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">person</span> <span class="o">=</span> <span class="n">person</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Condition</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isAdult</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">person</span><span class="o">.</span><span class="na">getAge</span><span class="o">()</span> <span class="o">&gt;</span> <span class="n">adultAge</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Action</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">markAsAdult</span><span class="o">(){</span>
+        <span class="n">person</span><span class="o">.</span><span class="na">setAdult</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span>
+            <span class="s">&quot;Person %s has been marked as adult.\n&quot;</span><span class="o">,</span>
+             <span class="n">person</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Priority</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getPriority</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="mi">1</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div>
+<p>As required, this rule class operates on a person that is passed at construction time.</p>
+
+<p>The <code>isAdult</code> method annotated with <code>@Condition</code> tells Easy Rules engine to call this method to check if the rule should be fired, in this case, if the person&#39;s age is greater than 18.</p>
+
+<p>The <code>markAsAdult</code> method annotated with <code>@Action</code> will mark the person as adult by setting the <code>adult</code> flag.</p>
+
+<p>Finally, the <code>getPriority</code> method annotated with <code>@Priority</code> tells Easy Rules engine to fire this rule in first order.</p>
+
+<p>Now, let&#39;s a class for rule 2:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Rule</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;alcoholRule&quot;</span><span class="o">,</span>
+      <span class="n">description</span> <span class="o">=</span> <span class="s">&quot;Children are not allowed to buy alcohol.&quot;</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">AlcoholRule</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="n">Person</span> <span class="n">person</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">AlcoholRule</span><span class="o">(</span><span class="n">Person</span> <span class="n">person</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">person</span> <span class="o">=</span> <span class="n">person</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Condition</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isChildren</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="o">!</span><span class="n">person</span><span class="o">.</span><span class="na">isAdult</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Action</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">denyAlcohol</span><span class="o">(){</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span>
+            <span class="s">&quot;Sorry %s, you are not allowed to buy alcohol.\n&quot;</span><span class="o">,</span>
+             <span class="n">person</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Priority</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getPriority</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="mi">2</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div>
+<p>As for rule 1, the class operates on a person instance and provides methods to define rule condition, action and priority.</p>
+
+<p>To launch the tutorial, we will use the following class:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Launcher</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+
+        <span class="c1">//create a person instance</span>
+        <span class="n">Person</span> <span class="n">tom</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Person</span><span class="o">(</span><span class="s">&quot;Tom&quot;</span><span class="o">,</span> <span class="mi">16</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span>
+            <span class="s">&quot;Tom: Hi! can I have some Vodka please?&quot;</span><span class="o">);</span>
+
+        <span class="c1">//create a rules engine</span>
+        <span class="n">AnnotatedRulesEngine</span> <span class="n">annotatedRulesEngine</span> <span class="o">=</span>
+                                <span class="k">new</span> <span class="nf">AnnotatedRulesEngine</span><span class="o">();</span>
+
+        <span class="c1">//register rules</span>
+        <span class="n">annotatedRulesEngine</span><span class="o">.</span><span class="na">registerRule</span><span class="o">(</span><span class="k">new</span> <span class="nf">AgeRule</span><span class="o">(</span><span class="n">tom</span><span class="o">));</span>
+        <span class="n">annotatedRulesEngine</span><span class="o">.</span><span class="na">registerRule</span><span class="o">(</span><span class="k">new</span> <span class="nf">AlcoholRule</span><span class="o">(</span><span class="n">tom</span><span class="o">));</span>
+
+        <span class="c1">//fire rules</span>
+        <span class="n">annotatedRulesEngine</span><span class="o">.</span><span class="na">fireRules</span><span class="o">();</span>
+
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div>
+<p>To run the tutorial, you can follow these instructions from the root directory of Easy Rules :</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>mvn install
+<span class="nv">$ </span><span class="nb">cd </span>easyrules-samples
+<span class="nv">$ </span>mvn <span class="nb">exec</span>:java -P runRulePriorityTutorial</code></pre></div>
+
+<p>If you run this tutorial, you would get the following output:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">Tom: Hi! can I have some Vodka please?
+Oct 13, 2014 9:37:14 PM org.easyrules.core.AnnotatedRulesEngine fireRules
+INFO: Rule alcoholRule triggered.
+Sorry Tom, you are not allowed to buy alcohol.
+Oct 13, 2014 9:37:14 PM org.easyrules.core.AnnotatedRulesEngine fireRules
+INFO: Rule alcoholRule performed successfully.
+</code></pre></div>
+<p>As you can see, since Tom&#39;s age is under 18, he has not been allowed to buy alcohol as expected.</p>
+
+          <div class="section-nav">
+  <div class="left align-right">
+    
+      <a href="http://www.easyrules.org/tutorials/hello-world.html" class="prev">
+        Back
+      </a>
+    
+  </div>
+  <div class="right align-left">
+    
+      <a href="http://www.easyrules.org/tutorials/dynamic-configuration.html" class="next">
+        Next
+      </a>
+    
+  </div>
+  <div class="clear"></div>
+</div>
+
+
+        </article>
+      </div>
+
+      <div class="unit one-fifth">
+  <aside>
+
+    <h4>About Easy Rules</h4>
+    <ul>
+      <li class="">
+        <a href="http://www.easyrules.org/about/overview.html">Overview</a>
+      </li>
+      <li class="">
+        <a href="http://www.easyrules.org/about/getting-started.html">Getting started</a>
+      </li>
+    </ul>
+
+    <h4>User guide</h4>
+      <ul>
+          <li class="">
+            <a href="http://www.easyrules.org/user-guide/introduction.html">Introduction</a>
+          </li>
+          <li class="">
+            <a href="http://www.easyrules.org/user-guide/defining-rules.html">Defining rules</a>
+          </li>
+          <li class="">
+            <a href="http://www.easyrules.org/user-guide/rules-engine.html">Rules engine</a>
+          </li>
+          <li class="">
+            <a href="http://www.easyrules.org/user-guide/managing-rules.html">Managing rules</a>
+          </li>
+      </ul>
+
+      <h4>Tutorials</h4>
+      <ul>
+          <li class="">
+            <a href="http://www.easyrules.org/tutorials/hello-world.html">Hello World</a>
+          </li>
+          <li class="current">
+          <a href="http://www.easyrules.org/tutorials/rule-priority.html">Rule Priority</a>
+          </li>
+          <li class="">
+            <a href="http://www.easyrules.org/tutorials/dynamic-configuration.html">Dynamic configuration</a>
+          </li>
+      </ul>
+
+
+
+    <h4>Get involved</h4>
+    <ul>
+        <li class="">
+            <a href="http://www.easyrules.org/get-involved/release-notes.html">Release notes</a>
+        </li>
+        <li>
+            <a target="_blank" href="https://github.com/benas/easy-rules">Source repository</a>
+        </li>
+        <li>
+            <a target="_blank" href="https://github.com/benas/easy-rules/issues">Issue tracker</a>
+        </li>
+    </ul>
+
+  </aside>
+</div>
+
+
+      <div class="clear"></div>
+
+    </div>
+  </section>
+
+
+  <footer>
+  <div class="grid">
+    <div class="unit one-third center-on-mobiles">
+      <p>Project created and maintained by <a target="_blank" href="http://www.mahmoudbenhassine.com">Mahmoud Ben Hassine</a>.</p>
+    </div>
+    <div class="unit two-thirds align-right center-on-mobiles">
+      <p>
+        Inspired by and built with <a target="_blank" href="http://jekyllrb.com">Jekyll</a>. Hosted on <a target="_blank" href="https://github.com">Github</a>.
+      </p>
+
+    </div>
+  </div>
+</footer>
+
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-46301888-1']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</body>
+
+</html>
+

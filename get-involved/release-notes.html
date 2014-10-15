@@ -2,7 +2,7 @@
 <html lang="en-US">
 <head>
   <meta charset="UTF-8">
-  <title>Overview</title>
+  <title>Release notes</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="author" content="Mahmoud Ben Hassine">
@@ -49,56 +49,111 @@
 </header>
 
 
-    <section class="docs">
+    <section class="news">
     <div class="grid">
 
       <div class="unit four-fifths">
         <article>
-          <h1>What is Easy rules?</h1>
-          <p>Easy Rules is a simple yet powerful Java rules engine providing the following features:</p>
+    <h2>
+        <a href="/get-involoved/release-notes.html">Release notes</a>
+    </h2>
 
-<ul>
-<li>Lightweight framework and easy to learn API</li>
-<li>POJO based development</li>
-<li>Useful abstractions to define business rules and apply them easily</li>
-<li>The ability to create composite rules from primitive ones</li>
-<li>Dynamic rule configuration at runtime using JMX</li>
-</ul>
+    <div class="release">
+        <span class="post-category">
+            <span class="label">Version 1.2.0</span>
+        </span>
+        <div class="post-meta">
+            <span class="post-date">2014-10-15</span>
+        </div>
+        <div class="post-content">
+            <p>This release brings the following improvements:</p><p></p>
+            <ul>
+                <li>Added a method in <code>RulesEngine</code> interface to unregister a rule.</li>
+                <li>Added a <a href="http://www.easyrules.org/tutorials/rule-priority.html">tutorial</a> with a showcase of rules priorities.</li>
+                <li>Improved code quality by fixing several sonar errors/warnings</li>
+            </ul>
+        </div>
+    </div>
 
-<p>In a very interesting <a href="http://martinfowler.com/bliki/RulesEngine.html">article</a> about rules engines, <a href="http://martinfowler.com/">Martin Fowler</a> says the following :</p>
+    <p></p>
 
-<blockquote>
-<p>You can build a simple rules engine yourself. All you need is to create a bunch of objects with conditions and actions, store them in a collection, and run through them to evaluate the conditions and execute the actions.</p>
-</blockquote>
+    <div class="release">
+        <span class="post-category">
+            <span class="label">Version 1.1.0</span>
+        </span>
+        <div class="post-meta">
+            <span class="post-date">2014-10-02</span>
+        </div>
+        <div class="post-content">
+            <p>This release introduced a big refactoring of Easy Rules APIs to provide the following features:</p><p></p>
+            <ul>
+                <li>Added annotation support to provide a POJO based development model</li>
+                <li>Added new site for documentation and tutorials</li>
+                <li>Added new set of tutorials for basic and advanced usage of Easy Rules APIs </li>
+                <li>Renamed base package from <code>io.github.benas</code> to <code>org.easyrules</code></li>
+            </ul>
+        </div>
+    </div>
 
-<p>This is exactly what Easy Rules does, with more features like rule composition and dynamic configuration.</p>
+    <p></p>
 
-          <div class="section-nav">
+    <div class="release">
+        <span class="post-category">
+            <span class="label">Version 1.0.1</span>
+        </span>
+        <div class="post-meta">
+            <span class="post-date">2014-01-24</span>
+        </div>
+        <div class="post-content">
+            <p>This minor release fixed the base package name.</p>
+        </div>
+    </div>
+
+    <p></p>
+
+    <div class="release">
+        <span class="post-category">
+            <span class="label">Version 1.0.0</span>
+        </span>
+        <div class="post-meta">
+            <span class="post-date">2013-12-23</span>
+        </div>
+        <div class="post-content">
+            <p>This is the first stable version of Easy Rules. It contains initial core API and implementation:</p>
+            <ul>
+                <li>Basic abstractions for rules and rules engine</li>
+                <li>Ability to create composite rules from primitive ones</li>
+                <li>Ability to manage rules at runtime via JMX</li>
+                <li>Java fluent API to create rules engine</li>
+            </ul>
+        </div>
+    </div>
+</article>
+        <div class="section-nav">
   <div class="left align-right">
     
-      <span class="prev disabled">Back</span>
+      <a href="http://www.easyrules.org/tutorials/dynamic-configuration.html" class="prev">
+        Back
+      </a>
     
   </div>
   <div class="right align-left">
     
-      <a href="http://www.easyrules.org/about/getting-started.html" class="next">
-        Next
-      </a>
+      <span class="next disabled">Next</span>
     
   </div>
   <div class="clear"></div>
 </div>
 
 
-        </article>
       </div>
 
-      <div class="unit one-fifth">
+        <div class="unit one-fifth">
   <aside>
 
     <h4>About Easy Rules</h4>
     <ul>
-      <li class="current">
+      <li class="">
         <a href="http://www.easyrules.org/about/overview.html">Overview</a>
       </li>
       <li class="">
@@ -139,7 +194,7 @@
 
     <h4>Get involved</h4>
     <ul>
-        <li class="">
+        <li class="current">
             <a href="http://www.easyrules.org/get-involved/release-notes.html">Release notes</a>
         </li>
         <li>
@@ -152,7 +207,6 @@
 
   </aside>
 </div>
-
 
       <div class="clear"></div>
 
