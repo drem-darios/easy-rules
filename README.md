@@ -18,7 +18,7 @@ Easy Rules is a simple yet powerful Java Rules Engine providing the following fe
 You can find some slides about Easy Rules on [speaker deck][].
 
 ## Why this fork?
-Easy Rules is a great lightweight rules engine, but the support for JMX makes it uncompatible with Android. In short this is due to the fact that the java.lang.management library depends on the JVM and Android runs off of the DVM. This project removes the dependency on this library so it can be imported and used by as an Android library.
+Easy Rules is a great lightweight rules engine, but the support for JMX makes it incompatible with Android. In short this is due to the fact that the java.lang.management library depends on the JVM and Android runs off of the DVM. This forked project removes the dependency on this library so it can be used by an Android application.
 
 ## Documentation
 
