@@ -24,7 +24,6 @@
 
 package org.easyrules.api;
 
-import javax.management.MXBean;
 
 /**
  * Abstraction for a rule that can be fired by the rules engine.<br/>
@@ -34,7 +33,6 @@ import javax.management.MXBean;
  * @author Mahmoud Ben Hassine (md.benhassine@gmail.com)
  */
 
-@MXBean
 public interface Rule {
 
     /**

@@ -1,11 +1,10 @@
 package org.easyrules.core;
 
+import java.util.Set;
+import java.util.logging.Logger;
+
 import org.easyrules.api.RulesEngine;
 import org.easyrules.util.EasyRulesConstants;
-
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Abstract rules engine class.

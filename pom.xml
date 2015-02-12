@@ -13,7 +13,6 @@
 
     <modules>
         <module>easyrules-core</module>
-        <module>easyrules-samples</module>
     </modules>
 
     <packaging>pom</packaging>
