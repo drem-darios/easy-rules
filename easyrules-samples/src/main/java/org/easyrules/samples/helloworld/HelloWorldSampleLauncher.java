@@ -22,58 +22,45 @@
  *  THE SOFTWARE.
  */
 
-package org.easyrules.api;
+package org.easyrules.samples.helloworld;
 
+import org.easyrules.core.AnnotatedRulesEngine;
+
+import java.util.Scanner;
 
 /**
- * Abstraction for a rule that can be fired by the rules engine.
- *
- * Rules are registered in the rules engine registry and must have a <strong>unique</strong> name.
+ * Launcher class of the Hello World sample.
  *
  * @author Mahmoud Ben Hassine (md.benhassine@gmail.com)
  */
-public interface Rule {
+public class HelloWorldSampleLauncher {
 
-    /**
-     * Getter for rule name.
-     * @return the rule name
-     */
-    String getName();
+    public static void main(String[] args) {
 
-    /**
-     * Getter for rule description.
-     * @return rule description
-     */
-    String getDescription();
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Are you a friend of duke? [yes/no]:");
+        String input = scanner.nextLine();
 
-    /**
-     * Setter for rule description.
-     * @param description new rule description
-     */
-    void setDescription(String description);
+        /**
+         * Declare the rule
+         */
+        HelloWorldRule helloWorldRule = new HelloWorldRule();
 
-    /**
-     * Getter for rule priority.
-     * @return rule priority
-     */
-    int getPriority();
+        /**
+         * Set business data to operate on
+         */
+        helloWorldRule.setInput(input.trim());
 
-    /**
-     * Setter for rule priority.
-     * @param priority the priority to set
-     */
-    void setPriority(int priority);
+        /**
+         * Create a rules engine and register the business rule
+         */
+        AnnotatedRulesEngine rulesEngine = new AnnotatedRulesEngine();
+        rulesEngine.registerRule(helloWorldRule);
 
-    /**
-     * Rule conditions abstraction : this method encapsulates the rule's conditions.
-     * @return true if the rule should be applied, false else
-     */
-    boolean evaluateConditions();
+        /**
+         * Fire rules
+         */
+        rulesEngine.fireRules();
 
-    /**
-     * Rule actions abstraction : this method encapsulates the rule's actions.
-     * @throws Exception thrown if an exception occurs during actions performing
-     */
-    void performActions() throws Exception;
-
+    }
 }

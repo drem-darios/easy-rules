@@ -22,58 +22,39 @@
  *  THE SOFTWARE.
  */
 
-package org.easyrules.api;
+package org.easyrules.samples.helloworld;
 
+import org.easyrules.annotation.Action;
+import org.easyrules.annotation.Condition;
+import org.easyrules.annotation.Rule;
 
 /**
- * Abstraction for a rule that can be fired by the rules engine.
- *
- * Rules are registered in the rules engine registry and must have a <strong>unique</strong> name.
+ * Hello World rule class.
  *
  * @author Mahmoud Ben Hassine (md.benhassine@gmail.com)
  */
-public interface Rule {
+@Rule(name = "Hello World rule", description = "Say Hello to only duke's friends")
+public class HelloWorldRule {
 
     /**
-     * Getter for rule name.
-     * @return the rule name
+     * The user input which represents the data that the rule will operate on.
      */
-    String getName();
+    private String input;
 
-    /**
-     * Getter for rule description.
-     * @return rule description
-     */
-    String getDescription();
+    @Condition
+    public boolean checkInput() {
+        //The rule should be applied only if the user's response is yes (duke friend)
+        return input.equalsIgnoreCase("yes");
+    }
 
-    /**
-     * Setter for rule description.
-     * @param description new rule description
-     */
-    void setDescription(String description);
+    @Action
+    public void sayHelloToDukeFriend() throws Exception {
+        //When rule conditions are satisfied, prints 'Hello duke's friend!' to the console
+        System.out.println("Hello duke's friend!");
+    }
 
-    /**
-     * Getter for rule priority.
-     * @return rule priority
-     */
-    int getPriority();
-
-    /**
-     * Setter for rule priority.
-     * @param priority the priority to set
-     */
-    void setPriority(int priority);
-
-    /**
-     * Rule conditions abstraction : this method encapsulates the rule's conditions.
-     * @return true if the rule should be applied, false else
-     */
-    boolean evaluateConditions();
-
-    /**
-     * Rule actions abstraction : this method encapsulates the rule's actions.
-     * @throws Exception thrown if an exception occurs during actions performing
-     */
-    void performActions() throws Exception;
+    public void setInput(String input) {
+        this.input = input;
+    }
 
 }

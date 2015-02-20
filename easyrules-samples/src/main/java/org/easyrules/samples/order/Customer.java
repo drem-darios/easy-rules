@@ -22,58 +22,30 @@
  *  THE SOFTWARE.
  */
 
-package org.easyrules.api;
-
+package org.easyrules.samples.order;
 
 /**
- * Abstraction for a rule that can be fired by the rules engine.
- *
- * Rules are registered in the rules engine registry and must have a <strong>unique</strong> name.
+ * Customer java bean.
  *
  * @author Mahmoud Ben Hassine (md.benhassine@gmail.com)
  */
-public interface Rule {
+class Customer {
 
-    /**
-     * Getter for rule name.
-     * @return the rule name
-     */
-    String getName();
+    private long customerId;
 
-    /**
-     * Getter for rule description.
-     * @return rule description
-     */
-    String getDescription();
+    private boolean isNew;
 
-    /**
-     * Setter for rule description.
-     * @param description new rule description
-     */
-    void setDescription(String description);
+    public Customer(long customerId, boolean isNew) {
+        this.customerId = customerId;
+        this.isNew = isNew;
+    }
 
-    /**
-     * Getter for rule priority.
-     * @return rule priority
-     */
-    int getPriority();
+    public long getCustomerId() {
+        return customerId;
+    }
 
-    /**
-     * Setter for rule priority.
-     * @param priority the priority to set
-     */
-    void setPriority(int priority);
-
-    /**
-     * Rule conditions abstraction : this method encapsulates the rule's conditions.
-     * @return true if the rule should be applied, false else
-     */
-    boolean evaluateConditions();
-
-    /**
-     * Rule actions abstraction : this method encapsulates the rule's actions.
-     * @throws Exception thrown if an exception occurs during actions performing
-     */
-    void performActions() throws Exception;
+    public boolean isNew() {
+        return isNew;
+    }
 
 }

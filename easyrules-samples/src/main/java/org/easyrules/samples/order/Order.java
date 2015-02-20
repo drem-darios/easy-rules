@@ -22,58 +22,30 @@
  *  THE SOFTWARE.
  */
 
-package org.easyrules.api;
-
+package org.easyrules.samples.order;
 
 /**
- * Abstraction for a rule that can be fired by the rules engine.
- *
- * Rules are registered in the rules engine registry and must have a <strong>unique</strong> name.
+ * Order java bean.
  *
  * @author Mahmoud Ben Hassine (md.benhassine@gmail.com)
  */
-public interface Rule {
+class Order {
 
-    /**
-     * Getter for rule name.
-     * @return the rule name
-     */
-    String getName();
+    private long orderId;
 
-    /**
-     * Getter for rule description.
-     * @return rule description
-     */
-    String getDescription();
+    private float amount;
 
-    /**
-     * Setter for rule description.
-     * @param description new rule description
-     */
-    void setDescription(String description);
+    public Order(long orderId, float amount) {
+        this.orderId = orderId;
+        this.amount = amount;
+    }
 
-    /**
-     * Getter for rule priority.
-     * @return rule priority
-     */
-    int getPriority();
+    public long getOrderId() {
+        return orderId;
+    }
 
-    /**
-     * Setter for rule priority.
-     * @param priority the priority to set
-     */
-    void setPriority(int priority);
-
-    /**
-     * Rule conditions abstraction : this method encapsulates the rule's conditions.
-     * @return true if the rule should be applied, false else
-     */
-    boolean evaluateConditions();
-
-    /**
-     * Rule actions abstraction : this method encapsulates the rule's actions.
-     * @throws Exception thrown if an exception occurs during actions performing
-     */
-    void performActions() throws Exception;
+    public float getAmount() {
+        return amount;
+    }
 
 }
