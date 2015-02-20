@@ -30,7 +30,6 @@ public abstract class AbstractRulesEngine<R> implements RulesEngine<R> {
      */
     protected int rulePriorityThreshold;
 
-
     @Override
     public void registerRule(R rule) {
         rules.add(rule);

@@ -22,58 +22,32 @@
  *  THE SOFTWARE.
  */
 
-package org.easyrules.api;
+package org.easyrules.samples.order;
 
+import javax.management.MXBean;
+
+import org.easyrules.jmx.api.JMXRule;
 
 /**
- * Abstraction for a rule that can be fired by the rules engine.
- *
- * Rules are registered in the rules engine registry and must have a <strong>unique</strong> name.
+ * Interface to make suspect order rule manageable via JMX.<br/>
+ * Suspect order threshold should be changed at runtime.
  *
  * @author Mahmoud Ben Hassine (md.benhassine@gmail.com)
  */
-public interface Rule {
+
+@MXBean
+public interface SuspectOrderJmxRule extends JMXRule {
 
     /**
-     * Getter for rule name.
-     * @return the rule name
+     * Get the current suspect order amount threshold
+     * @return current suspect order amount threshold
      */
-    String getName();
+    float getSuspectOrderAmountThreshold();
 
     /**
-     * Getter for rule description.
-     * @return rule description
+     * Set the suspect order amount threshold
+     * @param suspectOrderAmountThreshold the new suspect order amount threshold
      */
-    String getDescription();
-
-    /**
-     * Setter for rule description.
-     * @param description new rule description
-     */
-    void setDescription(String description);
-
-    /**
-     * Getter for rule priority.
-     * @return rule priority
-     */
-    int getPriority();
-
-    /**
-     * Setter for rule priority.
-     * @param priority the priority to set
-     */
-    void setPriority(int priority);
-
-    /**
-     * Rule conditions abstraction : this method encapsulates the rule's conditions.
-     * @return true if the rule should be applied, false else
-     */
-    boolean evaluateConditions();
-
-    /**
-     * Rule actions abstraction : this method encapsulates the rule's actions.
-     * @throws Exception thrown if an exception occurs during actions performing
-     */
-    void performActions() throws Exception;
+    void setSuspectOrderAmountThreshold(float suspectOrderAmountThreshold);
 
 }
